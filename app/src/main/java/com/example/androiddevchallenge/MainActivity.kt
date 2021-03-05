@@ -17,20 +17,29 @@ package com.example.androiddevchallenge
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
+
 class MainActivity : AppCompatActivity() {
+    val countDownViewModel by viewModels<CountDownViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContent {
             MyTheme {
-                MyApp()
+                MyApp(countDownViewModel)
             }
         }
     }
@@ -38,9 +47,80 @@ class MainActivity : AppCompatActivity() {
 
 // Start building your app here!
 @Composable
-fun MyApp() {
-    Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
+fun MyApp(viewModel: CountDownViewModel = CountDownViewModel()) {
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "Count Down Timer")
+                }
+            )
+        }
+    ) { innerPadding ->
+        BodyContent(viewModel, Modifier.padding(innerPadding))
+    }
+}
+
+@Composable
+fun BodyContent(
+    viewModel: CountDownViewModel,
+    modifier: Modifier = Modifier
+) {
+    Column {
+        Row {
+            EditButton(onClick = { viewModel.setStart(3) }, text = "3")
+            EditButton(onClick = { viewModel.setStart(5) }, text = "5")
+            EditButton(onClick = { viewModel.setStart(10) }, text = "10")
+        }
+        Row {
+            EditButton(
+                onClick = { viewModel.countDown() },
+                text = "Start"
+            )
+        }
+        Spacer(Modifier.height(8.dp))
+        CountDownRow(viewModel)
+    }
+
+}
+
+@Composable
+fun FinishAnimation() {
+
+}
+
+@Composable
+fun CountDownRow(
+    viewModel: CountDownViewModel,
+) {
+    Row(
+        modifier = Modifier
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = "${viewModel.restTime}",
+            style = MaterialTheme.typography.h1,
+            modifier = Modifier.alpha(viewModel.alpha)
+        )
+    }
+}
+
+@Composable
+fun EditButton(
+    onClick: () -> Unit,
+    text: String,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
+) {
+    TextButton(
+        onClick = onClick,
+        shape = CircleShape,
+        enabled = enabled,
+        modifier = modifier
+    ) {
+        Text(text)
     }
 }
 
