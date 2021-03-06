@@ -22,12 +22,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ButtonColors
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -77,21 +77,37 @@ fun BodyContent(
     viewModel: CountDownViewModel,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.fillMaxWidth()
+    Column(
+        modifier = modifier.fillMaxWidth()
     ) {
         Row {
-            EditButton(onClick = { viewModel.setStart(3) }, text = "3 sec")
-            EditButton(onClick = { viewModel.setStart(5) }, text = "5 sec")
-            EditButton(onClick = { viewModel.setStart(10) }, text = "10 sec")
+            EditButton(
+                onClick = { viewModel.setStart(3) },
+                text = "3 sec",
+                enabled = !viewModel.isPlaying
+            )
+            EditButton(
+                onClick = { viewModel.setStart(5) },
+                text = "5 sec",
+                enabled = !viewModel.isPlaying
+            )
+            EditButton(
+                onClick = { viewModel.setStart(10) },
+                text = "10 sec",
+                enabled = !viewModel.isPlaying
+            )
         }
         Spacer(Modifier.height(16.dp))
-        Row(modifier = Modifier.padding(start = 16.dp))
-        {
+        Row(modifier = Modifier.padding(start = 16.dp)) {
             EditButton(
-                onClick = { viewModel.countDown() },
+                onClick = {
+                    viewModel.countDown()
+                },
                 text = "Start",
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.secondary)
+                    backgroundColor = MaterialTheme.colors.secondary
+                ),
+                enabled = !viewModel.isPlaying
             )
         }
         Spacer(Modifier.height(16.dp))
@@ -107,7 +123,6 @@ fun BodyContent(
                 .alpha(viewModel.alpha)
         )
     }
-
 }
 
 @Composable
@@ -128,7 +143,7 @@ fun EditButton(
         enabled = enabled,
         modifier = modifier,
         colors = colors,
-        ) {
+    ) {
         Text(text)
     }
 }

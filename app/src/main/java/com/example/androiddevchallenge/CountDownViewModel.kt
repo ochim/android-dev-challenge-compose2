@@ -28,6 +28,9 @@ class CountDownViewModel : ViewModel() {
     var alpha by mutableStateOf(0.5f)
         private set
 
+    var isPlaying by mutableStateOf(false)
+        private set
+
     fun setStart(num: Int) {
         restTime = num
         alpha = 0.5f
@@ -42,9 +45,11 @@ class CountDownViewModel : ViewModel() {
             }
 
             override fun onFinish() {
+                isPlaying = false
                 finish()
             }
         }.start()
         alpha = 1.0f
+        isPlaying = true
     }
 }
