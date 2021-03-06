@@ -19,13 +19,15 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ButtonColors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -75,21 +77,37 @@ fun BodyContent(
     viewModel: CountDownViewModel,
     modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(modifier = modifier.fillMaxWidth()
+    ) {
         Row {
-            EditButton(onClick = { viewModel.setStart(3) }, text = "3")
-            EditButton(onClick = { viewModel.setStart(5) }, text = "5")
-            EditButton(onClick = { viewModel.setStart(10) }, text = "10")
+            EditButton(onClick = { viewModel.setStart(3) }, text = "3 sec")
+            EditButton(onClick = { viewModel.setStart(5) }, text = "5 sec")
+            EditButton(onClick = { viewModel.setStart(10) }, text = "10 sec")
         }
-        Row {
+        Spacer(Modifier.height(16.dp))
+        Row(modifier = Modifier.padding(start = 16.dp))
+        {
             EditButton(
                 onClick = { viewModel.countDown() },
-                text = "Start"
+                text = "Start",
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.secondary)
             )
         }
-        Spacer(Modifier.height(8.dp))
-        CountDownRow(viewModel)
+        Spacer(Modifier.height(16.dp))
+
+        // count down display
+        val text = if (viewModel.restTime == 0) "Lift off!" else "${viewModel.restTime}"
+        Text(
+            text = text,
+            style = MaterialTheme.typography.h1,
+            modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.CenterHorizontally)
+                .alpha(viewModel.alpha)
+        )
     }
+
 }
 
 @Composable
@@ -97,36 +115,20 @@ fun FinishAnimation() {
 }
 
 @Composable
-fun CountDownRow(
-    viewModel: CountDownViewModel,
-) {
-    Row(
-        modifier = Modifier
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "${viewModel.restTime}",
-            style = MaterialTheme.typography.h1,
-            modifier = Modifier.alpha(viewModel.alpha)
-        )
-    }
-}
-
-@Composable
 fun EditButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
+    colors: ButtonColors = ButtonDefaults.textButtonColors(),
     enabled: Boolean = true
 ) {
     TextButton(
         onClick = onClick,
         shape = CircleShape,
         enabled = enabled,
-        modifier = modifier
-    ) {
+        modifier = modifier,
+        colors = colors,
+        ) {
         Text(text)
     }
 }
