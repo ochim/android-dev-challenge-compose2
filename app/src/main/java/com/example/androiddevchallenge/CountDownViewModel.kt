@@ -22,24 +22,28 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class CountDownViewModel : ViewModel() {
+    private val defaultAlpha = 0.6f
+
     var restTime by mutableStateOf(3)
         private set
 
-    var alpha by mutableStateOf(0.5f)
+    var alpha by mutableStateOf(defaultAlpha)
         private set
 
     var isPlaying by mutableStateOf(false)
         private set
 
+    private var timer: CountDownTimer? = null
+
     fun setStart(num: Int) {
         restTime = num
-        alpha = 0.5f
+        alpha = defaultAlpha
     }
 
     fun countDown(finish: () -> Unit = {}) {
         if (restTime < 1) return
 
-        object : CountDownTimer(1000L * restTime, 1000) {
+        timer = object : CountDownTimer(1000L * restTime, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 restTime--
             }
@@ -51,5 +55,11 @@ class CountDownViewModel : ViewModel() {
         }.start()
         alpha = 1.0f
         isPlaying = true
+    }
+
+    fun pause() {
+        timer?.cancel()
+        isPlaying = false
+        alpha = defaultAlpha
     }
 }

@@ -124,6 +124,17 @@ fun BodyContent(
                 ),
                 enabled = !viewModel.isPlaying
             )
+            Spacer(Modifier.width(16.dp))
+            EditButton(
+                onClick = {
+                    viewModel.pause()
+                },
+                text = "Pause",
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.secondary
+                ),
+                enabled = viewModel.isPlaying
+            )
         }
         Spacer(Modifier.height(16.dp))
 
