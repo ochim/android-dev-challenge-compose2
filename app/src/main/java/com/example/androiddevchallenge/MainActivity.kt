@@ -164,16 +164,22 @@ fun CountItemEntryInput(viewModel: CountDownViewModel) {
 
     CountItemInput(
         text = text,
+        enabled = !viewModel.isPlaying,
         onTextChange = onTextChange,
         submit = submit,
     ) {
-        EditButton(onClick = submit, text = "SET", enabled = text.isNotBlank())
+        EditButton(
+            onClick = submit,
+            text = "SET",
+            enabled = text.isNotBlank() && !viewModel.isPlaying
+        )
     }
 }
 
 @Composable
 fun CountItemInput(
     text: String,
+    enabled: Boolean = true,
     onTextChange: (String) -> Unit,
     submit: () -> Unit,
     buttonSlot: @Composable () -> Unit,
@@ -189,7 +195,8 @@ fun CountItemInput(
                 text = text,
                 onTextChange = onTextChange,
                 onImeAction = submit,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                enabled = enabled,
             )
             Spacer(modifier = Modifier.width(8.dp))
             Box(Modifier.align(Alignment.CenterVertically)) { buttonSlot() }
@@ -203,6 +210,7 @@ fun InputText(
     text: String,
     onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onImeAction: () -> Unit = {}
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -218,7 +226,8 @@ fun InputText(
                 keyboardController?.hideSoftwareKeyboard()
             }
         ),
-        modifier = modifier
+        modifier = modifier,
+        enabled = enabled,
     )
 }
 
