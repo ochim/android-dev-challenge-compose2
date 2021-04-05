@@ -9,6 +9,7 @@ Countdown Timer
 ## :scroll: Description
 <!--- Describe your app in one or two sentences -->
 Minimum Countdown Timer
+[article](https://android-developers.googleblog.com/2021/03/android-dev-challenge-2.html)
 
 ## :bulb: Motivation and Context
 <!--- Optionally point readers to interesting parts of your submission. -->
